@@ -33,7 +33,10 @@ int main(int argc, const char * argv[]) {
 
         auto clientCollection = ClientCollection(clientpath) ;
         auto connectionStatus = ConnectionStatus(connectpath) ;
-        auto errorCollection = ErrorCollection(errorpath) ;
+        auto errorCollection = ErrorCollection() ;
+        if (std::filesystem::exists(errorpath)){
+            errorCollection = ErrorCollection(errorpath) ;
+        }
         
         auto output = std::ofstream(outputpath.string()) ;
         if (!output.is_open()){
@@ -47,11 +50,11 @@ int main(int argc, const char * argv[]) {
         output << "</head>\n";
         output << "<body>\n";
         
-    
+        printTable(output,clientCollection,connectionStatus,errorCollection) ;
         
         
         output << "</body>\n";
-        output << "/html>\n";
+        output << "</html>\n";
         
     }
     catch(const std::exception &e) {
@@ -108,11 +111,11 @@ auto printTable(std::ostream &output, ClientCollection &clients, ConnectionStatu
 // ==============================================================================================================
 auto printTableRow (std::ostream &output, const std::string &client, ConnectState state, bool has_error) -> void {
     auto concolor = "magenta"s ;
-    auto value = "NEVER"s ;
+    auto value = "Never"s ;
     switch(state) {
         case ConnectState::NEVER:
             concolor = "magenta"s;
-            value = "NEVER"s ;
+            value = "Never"s ;
             break;
         case ConnectState::CONNECTED:
             concolor = "green"s;

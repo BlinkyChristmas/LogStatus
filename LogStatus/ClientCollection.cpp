@@ -24,7 +24,7 @@ ClientCollection::ClientCollection(const std::filesystem::path &path):ClientColl
 
 //======================================================================
 auto ClientCollection::load(const std::filesystem::path &path) -> bool {
-    clients.clear() ;
+    clients = std::vector<ClientEntry>();
     
     auto input = std::ifstream(path.string()) ;
     if (!input.is_open()){
