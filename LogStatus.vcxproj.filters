@@ -1,0 +1,92 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="common">
+      <UniqueIdentifier>{05e678ea-16d9-45c3-80c0-236b2cd43cb2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="common\utility">
+      <UniqueIdentifier>{6f4c635a-0b8a-469e-9f4d-03413c8bddd9}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="common\utility\buffer.cpp">
+      <Filter>common\utility</Filter>
+    </ClCompile>
+    <ClCompile Include="common\utility\mapfile.cpp">
+      <Filter>common\utility</Filter>
+    </ClCompile>
+    <ClCompile Include="common\utility\timeutil.cpp">
+      <Filter>common\utility</Filter>
+    </ClCompile>
+    <ClCompile Include="LogStatus\ClientCollection.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="LogStatus\ClientEntry.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="LogStatus\ConnectionStatus.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="LogStatus\ErrorCollection.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="LogStatus\ErrorEntry.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="LogStatus\LogContainer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="LogStatus\LogEntry.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="LogStatus\main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="common\utility\buffer.hpp">
+      <Filter>common\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="common\utility\dbgutil.hpp">
+      <Filter>common\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="common\utility\mapfile.hpp">
+      <Filter>common\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="common\utility\strutil.hpp">
+      <Filter>common\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="common\utility\timeutil.hpp">
+      <Filter>common\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="LogStatus\ClientCollection.hpp">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LogStatus\ClientEntry.hpp">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LogStatus\ConnectionStatus.hpp">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LogStatus\ErrorCollection.hpp">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LogStatus\ErrorEntry.hpp">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LogStatus\LogContainer.hpp">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LogStatus\LogEntry.hpp">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
