@@ -25,10 +25,17 @@ auto ConnectionStatus::load(const std::filesystem::path &filepath) -> bool  {
         return false ;
     }
     auto fcopy = filepath ;
-    fcopy.replace_extension(fcopy.extension().string()+"-copy"s) ;
+    try {
+        fcopy.replace_extension(fcopy.extension().string() + "-copy"s);
+    }
+    catch (...) {
+        std::cerr << "Unable to copy file " << std::endl;
+    }
+    //std::cout << "copy the log file" << std::endl;
     std::filesystem::copy(filepath,fcopy) ;
     auto input = std::ifstream(fcopy.string()) ;
     if (!input.is_open()) {
+        std::cerr << "Unable to open copy: "s << fcopy.string() << std::endl;
         return false ;
     }
     auto buffer = std::vector<char>(2048,0) ;
@@ -52,6 +59,7 @@ auto ConnectionStatus::load(const std::filesystem::path &filepath) -> bool  {
             }
         }
     }
+    input.close();
     // Delete our copy of the file
     std::filesystem::remove(fcopy) ;
     // Now, lets sort them all
