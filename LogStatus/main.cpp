@@ -47,6 +47,7 @@ int main(int argc, const char * argv[]) {
         output << "<html>\n";
         output << "<head>\n";
         output << "     <title> Blinky Show Client Status</title>\n";
+        output << "     <meta http-equiv = \"refresh\" content = \"10\" >\n";
         output << "</head>\n";
         output << "<body>\n";
         
