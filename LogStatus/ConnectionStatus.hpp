@@ -16,11 +16,11 @@
 class ConnectionStatus {
     
     std::unordered_map<std::string, LogContainer> connectionStatus ;
-    
+    std::filesystem::path ourfile ;
 public:
     ConnectionStatus()  = default ;
     ConnectionStatus(const std::filesystem::path &filepath);
-    
+    std::filesystem::file_time_type lastRead ;
     auto load(const std::filesystem::path &filepath) -> bool ;
     
     auto size() const -> size_t ;
@@ -32,6 +32,7 @@ public:
     auto operator[](const std::string &key) const -> const LogContainer& ;
     auto operator[](const std::string &key)  -> LogContainer& ;
     auto save(const std::filesystem::path &path, int hours) -> bool ;
+    auto hasChanged() const -> bool ;
 };
 
 #endif /* ConnectionStatus_hpp */

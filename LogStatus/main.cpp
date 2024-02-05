@@ -5,6 +5,7 @@
 #include <stdexcept>
 #include <string>
 #include <fstream>
+#include <thread>
 
 #include "ErrorCollection.hpp"
 #include "ClientCollection.hpp"
@@ -18,13 +19,14 @@ enum ConnectState {
 
 auto printTable(std::ostream &output, ClientCollection &clients, ConnectionStatus &status, ErrorCollection &clienterrors) -> void ;
 auto printTableRow (std::ostream &output, const std::string &client, ConnectState state, bool has_error) -> void ;
-
+auto writeBeginning(std::ostream &output) -> void ;
+auto writeEnding(std::ostream &output) -> void ;
 //======================================================================================================================
 int main(int argc, const char * argv[]) {
     auto exitcode = EXIT_SUCCESS ;
     try{
-        if (argc != 5) {
-            throw std::runtime_error("Invalid # arguments, requires: clientpath  connectpath errorpath outputpath") ;
+        if (argc < 5) {
+            throw std::runtime_error("Invalid # arguments, requires: clientpath  connectpath errorpath outputpath [-update]") ;
         }
         auto clientpath = std::filesystem::path(argv[1]) ;
         auto connectpath = std::filesystem::path(argv[2]) ;
@@ -33,30 +35,42 @@ int main(int argc, const char * argv[]) {
 
         auto clientCollection = ClientCollection(clientpath) ;
         auto connectionStatus = ConnectionStatus(connectpath) ;
-        auto errorCollection = ErrorCollection() ;
-        if (std::filesystem::exists(errorpath)){
-            errorCollection = ErrorCollection(errorpath) ;
+        auto errorCollection = ErrorCollection(errorpath) ;
+        std::string updatestring  = "";
+        auto loop = true ;
+        if (argc == 6) {
+            // We should update?
+            updatestring = argv[5] ;
+            if (updatestring != "-update") {
+                throw std::runtime_error("Invalid # arguments, requires: clientpath  connectpath errorpath outputpath [-update]") ;
+            }
         }
-        
-        auto output = std::ofstream(outputpath.string()) ;
-        if (!output.is_open()){
-            throw std::runtime_error("Unable to create: "s + outputpath.string());
+        if (updatestring.empty()) {
+            loop = false ;
         }
-        // start writing the document
-        output << "<!DOCTYPE html>\n";
-        output << "<html>\n";
-        output << "<head>\n";
-        output << "     <title> Blinky Show Client Status</title>\n";
-        output << "     <meta http-equiv = \"refresh\" content = \"10\" >\n";
-        output << "</head>\n";
-        output << "<body>\n";
-        
-        printTable(output,clientCollection,connectionStatus,errorCollection) ;
-        
-        
-        output << "</body>\n";
-        output << "</html>\n";
-        
+
+        do {
+            if (connectionStatus.hasChanged()) {
+                connectionStatus.load(connectpath) ;
+            }
+            if (errorCollection.hasChanged()) {
+                errorCollection.load(errorpath) ;
+            }
+            auto output = std::ofstream(outputpath.string()) ;
+            if (!output.is_open()){
+                throw std::runtime_error("Unable to create: "s + outputpath.string());
+            }
+            writeBeginning(output) ;
+
+            printTable(output,clientCollection,connectionStatus,errorCollection) ;
+            writeEnding(output) ;
+            output.close() ;
+            if (loop) {
+                while(loop && !errorCollection.hasChanged() && !connectionStatus.hasChanged()) {
+                    std::this_thread::sleep_for(std::chrono::seconds(10)) ;
+                }
+            }
+        }while (loop);
     }
     catch(const std::exception &e) {
         std::cerr << e.what() << std::endl;
@@ -70,6 +84,25 @@ int main(int argc, const char * argv[]) {
     return 0;
 }
 
+
+// =========================================================================
+auto writeBeginning(std::ostream &output) -> void {
+    // start writing the document
+    output << "<!DOCTYPE html>\n";
+    output << "<html>\n";
+    output << "<head>\n";
+    output << "     <title> Blinky Show Client Status</title>\n";
+    output << "     <meta http-equiv = \"refresh\" content = \"10\" >\n";
+    output << "</head>\n";
+    output << "<body>\n";
+
+}
+// ========================================================================
+auto writeEnding(std::ostream &output) -> void {
+    output << "</body>\n";
+    output << "</html>\n";
+
+}
 // ===============================================================================================================================
 auto printTable(std::ostream &output, ClientCollection &clients, ConnectionStatus &status, ErrorCollection &clienterrors) -> void {
     output << "\t<table>\n";

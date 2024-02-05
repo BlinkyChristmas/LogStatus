@@ -14,7 +14,8 @@
 //======================================================================
 struct ErrorCollection {
     std::unordered_map<std::string,std::deque<ErrorEntry>> clienterrors ;
-    
+    std::filesystem::file_time_type lastRead ;
+    std::filesystem::path ourpath ;
     ErrorCollection() ;
     ErrorCollection(const std::filesystem::path &path) ;
 
@@ -26,6 +27,7 @@ struct ErrorCollection {
     
     auto operator[](const std::string &name) const -> const std::deque<ErrorEntry>& ;
     auto operator[](const std::string &name)  ->  std::deque<ErrorEntry>& ;
+    auto hasChanged() const -> bool ;
 };
 
 #endif /* ErrorCollection_hpp */

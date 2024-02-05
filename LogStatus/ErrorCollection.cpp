@@ -30,6 +30,7 @@ auto ErrorCollection::load(const std::filesystem::path &path) -> bool {
         return false ;
     }
     clienterrors.clear() ;
+    ourpath = path ;
     auto buffer = std::vector<char>(2048,0) ;
     while (input.good() && !input.eof()){
         input.getline(buffer.data(), buffer.size()) ;
@@ -52,6 +53,7 @@ auto ErrorCollection::load(const std::filesystem::path &path) -> bool {
         }
     }
     input.close() ;
+    lastRead = std::filesystem::last_write_time(path) ;
     for (auto &[name,entry]:clienterrors){
         std::sort(entry.begin(),entry.end()) ;
     }
@@ -89,4 +91,13 @@ auto ErrorCollection::operator[](const std::string &name)  ->  std::deque<ErrorE
     }
     return iter->second ;
 
+}
+//======================================================================
+auto ErrorCollection::hasChanged() const -> bool {
+    auto lastwrite = std::filesystem::last_write_time(ourpath) ;
+    
+    if ( std::chrono::duration_cast<std::chrono::seconds>(lastwrite - lastRead).count() > 0 ){
+        return true ;
+    }
+    return false ;
 }

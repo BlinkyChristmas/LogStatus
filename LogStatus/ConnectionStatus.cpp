@@ -24,20 +24,13 @@ auto ConnectionStatus::load(const std::filesystem::path &filepath) -> bool  {
     if (!std::filesystem::exists(filepath)) {
         return false ;
     }
-    auto fcopy = filepath ;
-    try {
-        fcopy.replace_extension(fcopy.extension().string() + "-copy"s);
-    }
-    catch (...) {
-        std::cerr << "Unable to copy file " << std::endl;
-    }
-    //std::cout << "copy the log file" << std::endl;
-    std::filesystem::copy(filepath,fcopy) ;
-    auto input = std::ifstream(fcopy.string()) ;
+    lastRead = std::filesystem::last_write_time(filepath) ;
+    auto input = std::ifstream(filepath.string()) ;
     if (!input.is_open()) {
-        std::cerr << "Unable to open copy: "s << fcopy.string() << std::endl;
+        std::cerr << "Unable to open: "s << filepath.string() << std::endl;
         return false ;
     }
+    ourfile = filepath ;
     auto buffer = std::vector<char>(2048,0) ;
     while (input.good() && !input.eof()) {
         input.getline(buffer.data(), buffer.size()-1) ;
@@ -61,7 +54,6 @@ auto ConnectionStatus::load(const std::filesystem::path &filepath) -> bool  {
     }
     input.close();
     // Delete our copy of the file
-    std::filesystem::remove(fcopy) ;
     // Now, lets sort them all
     for (auto &[name,entry]:connectionStatus) {
         entry.sort() ;
@@ -144,4 +136,15 @@ auto ConnectionStatus::save(const std::filesystem::path &path, int hours) -> boo
         }
     }
     return true ;
+}
+
+// ==============================================================================================================================
+auto ConnectionStatus::hasChanged() const -> bool {
+    auto lastwrite = std::filesystem::last_write_time(ourfile) ;
+    
+    if ( std::chrono::duration_cast<std::chrono::seconds>(lastwrite - lastRead).count() > 0 ){
+        return true ;
+    }
+    return false ;
+
 }
