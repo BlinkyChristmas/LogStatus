@@ -20,11 +20,14 @@ ErrorEntry::ErrorEntry( const std::string &line):ErrorEntry() {
     auto values = util::parse(line,",");
     switch (values.size()) {
         default:
-        case 4:
-            this->play_name = values[3] ;
+        case 3:
+            this->play_name = values[2] ;
+            [[fallthrough]];
+            /*
         case 3:
             this->address = values[2] ;
             [[fallthrough]];
+            */
         case 2:
             this->audio_error = (values[1] == "AUDIO" ? true:false) ;
             [[fallthrough]] ;
