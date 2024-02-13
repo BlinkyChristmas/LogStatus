@@ -96,8 +96,7 @@ auto writeBeginning(std::ostream& output) -> void {
   //  output << "src: url('C:\Windows\Fonts\Arial')\n";
  //   output << "}\n";
 
-    output << "<font style=\"size:24px;face:Arial\"></font>\n";
-
+ 
     output << "<head>\n";
    // output << "     <title> Blinky Show Client Status</title>\n";
     output << "     <meta http-equiv = \"refresh\" content = \"10\" >\n";
@@ -115,7 +114,7 @@ auto writeEnding(std::ostream& output) -> void {
 }
 // ===============================================================================================================================
 auto printTable(std::ostream& output, ClientCollection& clients, ConnectionStatus& status, ErrorCollection& clienterrors) -> void {
-    output << "\t<table>\n";
+    output << "\t<table style=\"font-family: Arial;font-size:16px\">\n";
     output << "\t\t<thead>\n"; 
     output << "\t\t\t<tr>\n";
 
@@ -125,7 +124,7 @@ auto printTable(std::ostream& output, ClientCollection& clients, ConnectionStatu
  //   output << "\t\t\t<th>style = \"background-color:#D0D0D0\" scope=\"col\">""</th>\n";
     output << "\t\t\t</tr>\n";
     output << "\t</table>\n";
-    output << "\t<table>\n";
+    output << "\t<table style=\"font-family: Arial;font-size:14px\">\n";
     output << "\t\t\t<tr>\n";
     output << "\t\t\t<th style=\"text-align:center;background-color:#A0A0A0;width:175px\" scope=\"col\">Client/Status</th>\n";
     output << "\t\t\t<th style=\"text-align:center;background-color:#A0A0A0;width:70px\" scope=\"col\">AudioErr</th>\n";
