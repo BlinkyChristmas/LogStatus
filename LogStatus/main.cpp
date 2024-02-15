@@ -6,6 +6,8 @@
 #include <string>
 #include <fstream>
 #include <thread>
+#include <vector>
+#include <sstream>
 
 #include "ErrorCollection.hpp"
 #include "ClientCollection.hpp"
@@ -18,7 +20,8 @@ enum ConnectState {
 };
 
 auto printTable(std::ostream& output, ClientCollection& clients, ConnectionStatus& status, ErrorCollection& clienterrors) -> void;
-auto printTableRow(std::ostream& output, const std::string& client, ConnectState state, bool has_error) -> void;
+auto printTableRow(std::ostream& output, const std::string& client, ConnectState state, bool audioerr, bool playerr, const std::string &playname ) -> void;
+//auto printTableRow(std::ostream& output, const std::string& client, ConnectState state, bool has_error) -> void;
 auto writeBeginning(std::ostream& output) -> void;
 auto writeEnding(std::ostream& output) -> void;
 //======================================================================================================================
@@ -89,17 +92,8 @@ int main(int argc, const char* argv[]) {
 auto writeBeginning(std::ostream& output) -> void {
     // start writing the document
     output << "<!DOCTYPE html>\n";
-    output << "<html>\n";
-       
-  //  output << "@font - face{\n";
-  //  output << "font - family: 'Arial';\n";
-  //  output << "src: url('C:\Windows\Fonts\Arial')\n";
- //   output << "}\n";
-
-    output << "<font style=\"size:24px;face:Arial\"></font>\n";
-
+    output << "<html>\n"; 
     output << "<head>\n";
-   // output << "     <title> Blinky Show Client Status</title>\n";
     output << "     <meta http-equiv = \"refresh\" content = \"10\" >\n";
     output << "<style>\n";
     output << "table,th,td{border:2px solid black;border-collapse:collapse}\n";
@@ -115,17 +109,14 @@ auto writeEnding(std::ostream& output) -> void {
 }
 // ===============================================================================================================================
 auto printTable(std::ostream& output, ClientCollection& clients, ConnectionStatus& status, ErrorCollection& clienterrors) -> void {
-    output << "\t<table>\n";
+    output << "\t<table style=\"font-family: Arial;font-size:16px;margin-left:40px;\">\n";
     output << "\t\t<thead>\n"; 
     output << "\t\t\t<tr>\n";
-
- //   output << "font-family: 'Arial', sans-serif;\n";
- //   output << "\t\t\t<th>style = \"background-color:#D0D0D0\" scope=\"col\">""</th>\n";
-    output << "\t\t\t<th style = \"text-align:center;color:#FFFFFF;background-color:#303030;width:502px\" scope=\"col\">Client Status</th>\n";
- //   output << "\t\t\t<th>style = \"background-color:#D0D0D0\" scope=\"col\">""</th>\n";
+    output << "\t\t\t<th style = \"text-align:center;color:#FFFFFF;background-color:#303030;width:502px\" scope=\t\"col\">Client Status</th>\n";
     output << "\t\t\t</tr>\n";
     output << "\t</table>\n";
-    output << "\t<table>\n";
+
+    output << "\t<table style=\"font-family: Arial;font-size:14px;margin-left:40px;\">\n";
     output << "\t\t\t<tr>\n";
     output << "\t\t\t<th style=\"text-align:center;background-color:#A0A0A0;width:175px\" scope=\"col\">Client/Status</th>\n";
     output << "\t\t\t<th style=\"text-align:center;background-color:#A0A0A0;width:70px\" scope=\"col\">AudioErr</th>\n";
@@ -133,7 +124,6 @@ auto printTable(std::ostream& output, ClientCollection& clients, ConnectionStatu
     output << "\t\t\t<th style=\"text-align:center;background-color:#A0A0A0;width:175px\" scope=\"col\">Song Name</th>\n";
     output << "\t\t\t</tr>\n";
     output << "\t\t</thead>\n";
-
     output << "\t\t<tbody>\n";
 
     for (const auto& client : clients.clients) {
@@ -145,13 +135,27 @@ auto printTable(std::ostream& output, ClientCollection& clients, ConnectionStatu
                 state = ConnectState::CONNECTED;
             }
         }
-        auto has_error = false;
+  //      auto has_error = false;
+  //      if (clienterrors.contains(client.name)) {
+  //          has_error = true;
+  //      }
+        auto play_error = false;
+        auto audio_error = false;
+        auto playname = ""s;
+  
         if (clienterrors.contains(client.name)) {
-            has_error = true;
-        }
+
+            auto eiter = clienterrors[client.name].rbegin();
+            audio_error = eiter->audio_error;
+            play_error = !eiter->audio_error;
+            playname = eiter->play_name;
+         }
+
+        
 
         // Now we print the entry ;
-        printTableRow(output, client.name, state, has_error);
+ //       printTableRow(output, client.name, state, has_error);
+        printTableRow(output, client.name, state, audio_error, play_error, playname);
     }
 
 
@@ -162,7 +166,8 @@ auto printTable(std::ostream& output, ClientCollection& clients, ConnectionStatu
 }
 
 // ==============================================================================================================
-auto printTableRow(std::ostream& output, const std::string& client, ConnectState state, bool has_error) -> void {
+//auto printTableRow(std::ostream& output, const std::string& client, ConnectState state, bool has_error) -> void {
+auto printTableRow(std::ostream& output, const std::string& client, ConnectState state, bool audioerr, bool playerr , const std::string &playname) -> void {
     auto concolor = "#FFFF99"s;
     auto value = "Never"s;
     switch (state) {
@@ -180,14 +185,9 @@ auto printTableRow(std::ostream& output, const std::string& client, ConnectState
         break;
     }
     output << "\t\t\t<tr style=\"text-align:center;\">\n";
-    //output << "\t\t\t\t<td style=\"background-color:" << concolor << ";\n";
     output << "\t\t\t\t<td style=\"background-color:" << concolor << ";\">" << client << "</td>\n";
-   // output << "\t\t\t\t<th scope=\"row\">" << client << "</th>\n";
-   // output << "\t\t\t\t<th scope=\"row\">" << client << "</th>\n";
-   // output << "\t\t\t\t<td style=\"background-color:" << concolor << ";\">" << value << "</td>\n";
-   // output << "\t\t\t\t<td " << (has_error ? "style=\"background-color:red;\">" : "style=\"background-color:" << concolor << )"";\">") << (has_error ? "Error" : "") << "</td>\n";
-    output << "\t\t\t\t<td " << (has_error ? "style=\"background-color:#FF8888;\">" : "style=\"background-color:#D0D0D0;\">") << (has_error ? "Error" : "") << "</td>\n";
-    output << "\t\t\t\t<td " << (has_error ? "style=\"background-color:#FF8888;\">" : "style=\"background-color:#D0D0D0;\">") << (has_error ? "Error" : "") << "</td>\n";
-    output << "\t\t\t\t<td " << (has_error ? "style=\"background-color:#FF8888;\">" : "style=\"background-color:#D0D0D0;\">") << (has_error ? "Error" : "") << "</td>\n";
+    output << "\t\t\t\t<td " << (audioerr ? "style=\"background-color:#FF8888;\">" : "style=\"background-color:#D0D0D0;\">") << (audioerr ? "Error" : "") << "</td>\n";
+    output << "\t\t\t\t<td " << (playerr ? "style=\"background-color:#FF8888;\">" : "style=\"background-color:#D0D0D0;\">") << (playerr ? "Error" : "") << "</td>\n";
+    output << "\t\t\t\t<td " << (playerr ? "style=\"background-color:#FF8888;\">" : "style=\"background-color:#D0D0D0;\">") << (playerr ? playname : "") << "</td>\n";
     output << "\t\t\t</tr>\n";
 }
