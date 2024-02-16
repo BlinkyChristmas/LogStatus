@@ -21,7 +21,7 @@ ServerStatusEntry::ServerStatusEntry(const std::string &line) : ServerStatusEntr
             isListening = (values[1]=="OFF"?false:true) ;
             [[fallthrough]];
         case 1:
-            isRunning = (values[1]=="OFF"?false:true) ;
+            isRunning = (values[0]=="OFF"?false:true) ;
             [[fallthrough]];
         case 0:
             break;
