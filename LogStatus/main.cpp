@@ -30,11 +30,11 @@ int main(int argc, const char* argv[]) {
     auto exitcode = EXIT_SUCCESS;
     try {
         if (argc < 6) {
-            throw std::runtime_error("Invalid # arguments, requires: clientpath  connectpath errorpath outputpath [-update]");
+            throw std::runtime_error("Invalid # arguments, requires: clientpath  serverlog connectpath errorpath outputpath [-update]");
         }
         auto clientpath = std::filesystem::path(argv[1]);
         ServerStatus serverStatus ;
-        auto serverlog = argv[2] ;
+        auto serverlog = std::string(argv[2]) ;
         auto connectpath = std::filesystem::path(argv[3]);
         auto errorpath = std::filesystem::path(argv[4]);
         auto outputpath = std::filesystem::path(argv[5]);
@@ -49,7 +49,7 @@ int main(int argc, const char* argv[]) {
             // We should update?
             updatestring = argv[6];
             if (updatestring != "-update") {
-                throw std::runtime_error("Invalid # arguments, requires: clientpath  connectpath errorpath outputpath [-update]");
+                throw std::runtime_error("Invalid # arguments, requires: clientpath  serverlog connectpath errorpath outputpath [-update]");
             }
         }
         if (updatestring.empty()) {
@@ -57,6 +57,9 @@ int main(int argc, const char* argv[]) {
         }
 
         do {
+            if (serverStatus.hasChanged()) {
+                serverStatus.load(serverlog);
+            }
             if (connectionStatus.hasChanged()) {
                 connectionStatus.load(connectpath);
             }

@@ -31,6 +31,9 @@ ServerStatusEntry::ServerStatusEntry(const std::string &line) : ServerStatusEntr
 //======================================================================
 auto ServerStatus::load(const std::string &filepath) -> bool {
     entries.clear() ;
+    ourfile = std::filesystem::path(filepath) ;
+    lastRead = std::filesystem::last_write_time(ourfile) ;
+
     auto input = std::ifstream(filepath) ;
     if (!input.is_open()) {
         return false ;
@@ -60,4 +63,15 @@ auto ServerStatus::status() const -> const ServerStatusEntry & {
         return noentry ;
     }
     return *(entries.rbegin()) ;
+}
+
+// ==============================================================================================================================
+auto ServerStatus::hasChanged() const -> bool {
+    auto lastwrite = std::filesystem::last_write_time(ourfile) ;
+    
+    if ( std::chrono::duration_cast<std::chrono::seconds>(lastwrite - lastRead).count() > 0 ){
+        return true ;
+    }
+    return false ;
+
 }

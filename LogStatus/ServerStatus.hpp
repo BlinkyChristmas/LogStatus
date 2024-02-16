@@ -6,6 +6,7 @@
 #include <cstdint>
 #include <iostream>
 #include <string>
+#include <filesystem>
 
 //======================================================================
 struct ServerStatusEntry {
@@ -17,9 +18,13 @@ struct ServerStatusEntry {
 };
 //======================================================================
 struct ServerStatus {
+    std::filesystem::file_time_type lastRead ;
+    std::filesystem::path ourfile ;
     std::vector<ServerStatusEntry> entries ;
     auto load(const std::string &filepath) -> bool ;
     auto status() const -> const ServerStatusEntry & ;
+    auto hasChanged() const -> bool ;
+
 };
 
 #endif /* ServerStatus_hpp */
