@@ -30,6 +30,7 @@
     <ClCompile Include="LogStatus\LogContainer.cpp" />
     <ClCompile Include="LogStatus\LogEntry.cpp" />
     <ClCompile Include="LogStatus\main.cpp" />
+    <ClCompile Include="LogStatus\ServerStatus.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="common\utility\buffer.hpp" />
@@ -44,6 +45,7 @@
     <ClInclude Include="LogStatus\ErrorEntry.hpp" />
     <ClInclude Include="LogStatus\LogContainer.hpp" />
     <ClInclude Include="LogStatus\LogEntry.hpp" />
+    <ClInclude Include="LogStatus\ServerStatus.hpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

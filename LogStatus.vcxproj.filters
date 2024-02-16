@@ -50,6 +50,9 @@
     <ClCompile Include="LogStatus\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="LogStatus\ServerStatus.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="common\utility\buffer.hpp">
@@ -86,6 +89,9 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="LogStatus\LogEntry.hpp">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LogStatus\ServerStatus.hpp">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
