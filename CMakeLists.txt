@@ -17,7 +17,9 @@ add_executable(LogStatus
     ./LogStatus/LogContrainer.hpp
     ./LogStatus/LogEntry.cpp
     ./LogStatus/LogEntry.hpp
-    
+    ./LogStatus/ServerStatus.cpp
+    ./LogStatus/ServerStatus.hpp
+
     ./common/utility/buffer.cpp
     ./common/utility/buffer.hpp
     ./common/utility/dbgutil.hpp

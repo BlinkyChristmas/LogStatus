@@ -12,6 +12,7 @@
 #include "ErrorCollection.hpp"
 #include "ClientCollection.hpp"
 #include "ConnectionStatus.hpp"
+#include "ServerStatus.hpp"
 
 using namespace std::string_literals;
 
@@ -19,7 +20,7 @@ enum ConnectState {
     NEVER, CONNECTED, DISCONNECTED
 };
 
-auto printTable(std::ostream& output, ClientCollection& clients, ConnectionStatus& status, ErrorCollection& clienterrors) -> void;
+auto printTable(std::ostream& output, const ServerStatusEntry &serverstatus, ClientCollection& clients, ConnectionStatus& status, ErrorCollection& clienterrors) -> void;
 auto printTableRow(std::ostream& output, const std::string& client, ConnectState state, bool audioerr, bool playerr, const std::string &playname ) -> void;
 //auto printTableRow(std::ostream& output, const std::string& client, ConnectState state, bool has_error) -> void;
 auto writeBeginning(std::ostream& output) -> void;
@@ -28,22 +29,25 @@ auto writeEnding(std::ostream& output) -> void;
 int main(int argc, const char* argv[]) {
     auto exitcode = EXIT_SUCCESS;
     try {
-        if (argc < 5) {
+        if (argc < 6) {
             throw std::runtime_error("Invalid # arguments, requires: clientpath  connectpath errorpath outputpath [-update]");
         }
         auto clientpath = std::filesystem::path(argv[1]);
-        auto connectpath = std::filesystem::path(argv[2]);
-        auto errorpath = std::filesystem::path(argv[3]);
-        auto outputpath = std::filesystem::path(argv[4]);
-
+        ServerStatus serverStatus ;
+        auto serverlog = argv[2] ;
+        auto connectpath = std::filesystem::path(argv[3]);
+        auto errorpath = std::filesystem::path(argv[4]);
+        auto outputpath = std::filesystem::path(argv[5]);
+        
+        serverStatus.load(serverlog);
         auto clientCollection = ClientCollection(clientpath);
         auto connectionStatus = ConnectionStatus(connectpath);
         auto errorCollection = ErrorCollection(errorpath);
         std::string updatestring = "";
         auto loop = true;
-        if (argc == 6) {
+        if (argc == 7) {
             // We should update?
-            updatestring = argv[5];
+            updatestring = argv[6];
             if (updatestring != "-update") {
                 throw std::runtime_error("Invalid # arguments, requires: clientpath  connectpath errorpath outputpath [-update]");
             }
@@ -65,7 +69,7 @@ int main(int argc, const char* argv[]) {
             }
             writeBeginning(output);
 
-            printTable(output, clientCollection, connectionStatus, errorCollection);
+            printTable(output, serverStatus.status(),clientCollection, connectionStatus, errorCollection);
             writeEnding(output);
             output.close();
             if (loop) {
@@ -108,7 +112,8 @@ auto writeEnding(std::ostream& output) -> void {
 
 }
 // ===============================================================================================================================
-auto printTable(std::ostream& output, ClientCollection& clients, ConnectionStatus& status, ErrorCollection& clienterrors) -> void {
+auto printTable(std::ostream& output, const ServerStatusEntry &serverstatus, ClientCollection& clients, ConnectionStatus& status, ErrorCollection& clienterrors) -> void {
+    
     output << "\t<table style=\"font-family: Arial;font-size:16px;margin-left:40px;\">\n";
     output << "\t\t<thead>\n"; 
     output << "\t\t\t<tr>\n";
