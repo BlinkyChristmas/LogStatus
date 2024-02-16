@@ -117,12 +117,40 @@ auto writeEnding(std::ostream& output) -> void {
 // ===============================================================================================================================
 auto printTable(std::ostream& output, const ServerStatusEntry &serverstatus, ClientCollection& clients, ConnectionStatus& status, ErrorCollection& clienterrors) -> void {
     
+    auto color = "#FFFFFF"s;
+    auto text = "Not Running Server"s;
+    if (serverstatus.isRunning) {
+        color = "#D0D0D0"s;
+        text = "Waiting for Show Time"s;
+    }
+    if (serverstatus.isListening) {
+        color = "#9999FF"s;
+        text = "Listening for Clients"s;
+    }
+    if (serverstatus.inShow) {
+        color = "#99FF99";
+        text = "Playing Show"s;
+    }
+
+
     output << "\t<table style=\"font-family: Arial;font-size:16px;margin-left:40px;\">\n";
     output << "\t\t<thead>\n"; 
     output << "\t\t\t<tr>\n";
-    output << "\t\t\t<th style = \"text-align:center;color:#FFFFFF;background-color:#303030;width:502px\" scope=\t\"col\">Client Status</th>\n";
+    output << "\t\t\t<th style = \"text-align:center;color:#FFFFFF;background-color:#303030;width:502px\" scope=\"col\">Server Status</th>\n";
+    output << "\t\t\t</tr>\n";
+    output << "\t\t\t<tr>\n";
+    output << "\t<table style=\"font-family: Arial;font-size:14px;margin-left:40px;\">\n";
+    output << "\t\t\t<td style = \"text-align:center;color:#000000;background-color:"<< color<<";width:502px\" scope=\"col\">" << text << "</td>\n";
     output << "\t\t\t</tr>\n";
     output << "\t</table>\n";
+
+    output << "\t<table style=\"font-family: Arial;font-size:16px;margin-left:40px;\">\n";
+    output << "\t\t<thead>\n";
+    output << "\t\t\t<tr>\n";
+    output << "\t\t\t<th style = \"text-align:center;color:#FFFFFF;background-color:#303030;width:502px\" scope=\"col\">Client Status</th>\n";
+    output << "\t\t\t</tr>\n";
+    output << "\t</table>\n";
+
 
     output << "\t<table style=\"font-family: Arial;font-size:14px;margin-left:40px;\">\n";
     output << "\t\t\t<tr>\n";
