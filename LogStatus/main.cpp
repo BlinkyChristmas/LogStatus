@@ -101,7 +101,7 @@ auto writeBeginning(std::ostream& output) -> void {
     output << "<!DOCTYPE html>\n";
     output << "<html>\n"; 
     output << "<head>\n";
-   // output << "     <meta http-equiv = \"refresh\" content = \"10\" >\n";
+    output << "     <meta http-equiv = \"refresh\" content = \"10\" >\n";
     output << "<style>\n";
     output << "table,th,td{border:2px solid black;border-collapse:collapse}\n";
     output << "</style>\n";
