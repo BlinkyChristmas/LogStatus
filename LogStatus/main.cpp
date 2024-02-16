@@ -76,7 +76,7 @@ int main(int argc, const char* argv[]) {
             writeEnding(output);
             output.close();
             if (loop) {
-                while (loop && !errorCollection.hasChanged() && !connectionStatus.hasChanged()) {
+                while (loop && !serverStatus.hasChanged() && !errorCollection.hasChanged() && !connectionStatus.hasChanged()) {
                     std::this_thread::sleep_for(std::chrono::seconds(10));
                 }
             }
