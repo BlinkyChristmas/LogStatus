@@ -117,14 +117,14 @@ auto writeEnding(std::ostream& output) -> void {
 // ===============================================================================================================================
 auto printTable(std::ostream& output, const ServerStatusEntry &serverstatus, ClientCollection& clients, ConnectionStatus& status, ErrorCollection& clienterrors) -> void {
     
-    auto color = "#FFFFFF"s;
+    auto color = "#FFFF99"s;
     auto text = "Not Running Server"s;
     if (serverstatus.isRunning) {
         color = "#D0D0D0"s;
         text = "Waiting for Show Time"s;
     }
     if (serverstatus.isListening) {
-        color = "#9999FF"s;
+        color = "#99CCFF"s;
         text = "Listening for Clients"s;
     }
     if (serverstatus.inShow) {
