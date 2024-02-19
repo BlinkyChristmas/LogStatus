@@ -13,6 +13,8 @@
 #include "ClientCollection.hpp"
 #include "ConnectionStatus.hpp"
 #include "ServerStatus.hpp"
+#include "utility\timeutil.hpp"
+#include "utility\strutil.hpp"
 
 using namespace std::string_literals;
 
@@ -135,6 +137,9 @@ auto printTable(std::ostream& output, const ServerStatusEntry &serverstatus, Cli
 
     output << "\t<table style=\"font-family: Arial;font-size:16px;margin-left:40px;\">\n";
     output << "\t\t<thead>\n"; 
+    output << "\t\t\t<tr>\n";
+    output << "\t\t\t<th style = \"text-align:center;color:"<< color<<";background-color:#303030;width:502px\" scope=\"col\">" << util::sysTimeToString(util::ourclock::now()) << "</th>\n";
+    output << "\t\t\t</tr>\n";
     output << "\t\t\t<tr>\n";
     output << "\t\t\t<th style = \"text-align:center;color:#FFFFFF;background-color:#303030;width:502px\" scope=\"col\">Server Status</th>\n";
     output << "\t\t\t</tr>\n";
