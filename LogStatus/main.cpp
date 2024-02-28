@@ -127,7 +127,7 @@ auto printTable(std::ostream& output, const ServerStatusEntry &serverstatus, Cli
     }
     if (serverstatus.isListening) {
         color = "#99CCFF"s;
-        text = "Listening for Clients"s;
+        text = "Managing Clients"s;
     }
     if (serverstatus.inShow) {
         color = "#99FF99";
@@ -160,39 +160,40 @@ auto printTable(std::ostream& output, const ServerStatusEntry &serverstatus, Cli
     output << "\t<table style=\"font-family: Arial;font-size:14px;margin-left:40px;\">\n";
     output << "\t\t\t<tr>\n";
     output << "\t\t\t<th style=\"text-align:center;background-color:#A0A0A0;width:175px\" scope=\"col\">Client/Status</th>\n";
-    output << "\t\t\t<th style=\"text-align:center;background-color:#A0A0A0;width:70px\" scope=\"col\">AudioErr</th>\n";
-    output << "\t\t\t<th style=\"text-align:center;background-color:#A0A0A0;width:70px\" scope=\"col\">PlayErr</th>\n";
-    output << "\t\t\t<th style=\"text-align:center;background-color:#A0A0A0;width:175px\" scope=\"col\">Song Name</th>\n";
-    output << "\t\t\t</tr>\n";
+    output << "\t\t\t<th style=\"text-align:center;background-color:#A0A0A0;width:175px\" scope=\"col\">Timestamp</th>\n";
+    output << "\t\t\t<th style=\"text-align:center;background-color:#A0A0A0;width:70px\" scope=\"col\">Error</th>\n";
+     output << "\t\t\t</tr>\n";
     output << "\t\t</thead>\n";
     output << "\t\t<tbody>\n";
-
+    const auto formattime = "%a %b %d %H:%M:%S"s;
     for (const auto& client : clients.clients) {
 
         ConnectState state = ConnectState::NEVER;
+        auto playname = ""s;
         if (status.contains(client.name)) {
             state = ConnectState::DISCONNECTED;
             if (status[client.name].last().state) {
                 state = ConnectState::CONNECTED;
             }
+           playname = util::sysTimeToString(status[client.name].last().timestamp,formattime);
         }
+       
   //      auto has_error = false;
   //      if (clienterrors.contains(client.name)) {
   //          has_error = true;
   //      }
         auto play_error = false;
         auto audio_error = false;
-        auto playname = ""s;
-  
+       
+
         if (clienterrors.contains(client.name)) {
 
             auto eiter = clienterrors[client.name].rbegin();
             audio_error = eiter->audio_error;
             play_error = !eiter->audio_error;
-            playname = eiter->play_name;
          }
 
-        
+       
 
         // Now we print the entry ;
  //       printTableRow(output, client.name, state, has_error);
@@ -227,8 +228,10 @@ auto printTableRow(std::ostream& output, const std::string& client, ConnectState
     }
     output << "\t\t\t<tr style=\"text-align:center;\">\n";
     output << "\t\t\t\t<td style=\"background-color:" << concolor << ";\">" << client << "</td>\n";
-    output << "\t\t\t\t<td " << (audioerr ? "style=\"background-color:#FF8888;\">" : "style=\"background-color:#D0D0D0;\">") << (audioerr ? "Error" : "") << "</td>\n";
-    output << "\t\t\t\t<td " << (playerr ? "style=\"background-color:#FF8888;\">" : "style=\"background-color:#D0D0D0;\">") << (playerr ? "Error" : "") << "</td>\n";
-    output << "\t\t\t\t<td " << (playerr ? "style=\"background-color:#FF8888;\">" : "style=\"background-color:#D0D0D0;\">") << (playerr ? playname : "") << "</td>\n";
+    output << "\t\t\t\t<td style=\"background-color:" << concolor << ";\">" << playname << "</td>\n";
+    output << "\t\t\t\t<td " << ((audioerr || playerr) ? "style=\"background-color:#FF8888;\">" : "style=\"background-color:#D0D0D0;\">") << ((audioerr || playerr) ? "Error" : "") << "</td>\n";
+//    output << "\t\t\t\t<td " << (playerr ? "style=\"background-color:#FF8888;\">" : "style=\"background-color:#D0D0D0;\">") << (playerr ? "Error" : "") << "</td>\n";
+//    output << "\t\t\t\t<td " << (playerr ? "style=\"background-color:#FF8888;\">" : "style=\"background-color:#D0D0D0;\">") << (playerr ? playname : "") << "</td>\n";
+ 
     output << "\t\t\t</tr>\n";
 }
