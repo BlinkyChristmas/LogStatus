@@ -123,11 +123,11 @@ auto printTable(std::ostream& output, const ServerStatusEntry &serverstatus, Cli
     auto text = "Not Running Server"s;
     if (serverstatus.isRunning) {
         color = "#D0D0D0"s;
-        text = "Waiting for Show Time"s;
+        text = "Server Waiting for Show Time"s;
     }
     if (serverstatus.isListening) {
         color = "#99CCFF"s;
-        text = "Managing Clients"s;
+        text = "Server Idle"s;
     }
     if (serverstatus.inShow) {
         color = "#99FF99";
@@ -138,34 +138,34 @@ auto printTable(std::ostream& output, const ServerStatusEntry &serverstatus, Cli
     output << "\t<table style=\"font-family: Arial;font-size:16px;margin-left:40px;\">\n";
     output << "\t\t<thead>\n"; 
     output << "\t\t\t<tr>\n";
-    output << "\t\t\t<th style = \"text-align:center;color:"<< color<<";background-color:#303030;width:502px\" scope=\"col\">" << util::sysTimeToString(util::ourclock::now()) << "</th>\n";
+    output << "\t\t\t<th style = \"text-align:center;color:"<< color<<";background-color:#303030;width:423px\" scope=\"col\">" << util::sysTimeToString(util::ourclock::now()) << "</th>\n";
     output << "\t\t\t</tr>\n";
     output << "\t\t\t<tr>\n";
-    output << "\t\t\t<th style = \"text-align:center;color:#FFFFFF;background-color:#303030;width:502px\" scope=\"col\">Server Status</th>\n";
+    output << "\t\t\t<th style = \"text-align:center;color:#FFFFFF;background-color:#303030;width:423px\" scope=\"col\">Server Status</th>\n";
     output << "\t\t\t</tr>\n";
     output << "\t\t\t<tr>\n";
     output << "\t<table style=\"font-family: Arial;font-size:14px;margin-left:40px;\">\n";
-    output << "\t\t\t<td style = \"text-align:center;color:#000000;background-color:"<< color<<";width:502px\" scope=\"col\">" << text << "</td>\n";
+    output << "\t\t\t<td style = \"text-align:center;color:#000000;background-color:"<< color<<";width:423px\" scope=\"col\">" << text << "</td>\n";
     output << "\t\t\t</tr>\n";
     output << "\t</table>\n";
 
     output << "\t<table style=\"font-family: Arial;font-size:16px;margin-left:40px;\">\n";
     output << "\t\t<thead>\n";
     output << "\t\t\t<tr>\n";
-    output << "\t\t\t<th style = \"text-align:center;color:#FFFFFF;background-color:#303030;width:502px\" scope=\"col\">Client Status</th>\n";
+    output << "\t\t\t<th style = \"text-align:center;color:#FFFFFF;background-color:#303030;width:423px\" scope=\"col\">Client Status</th>\n";
     output << "\t\t\t</tr>\n";
     output << "\t</table>\n";
 
 
     output << "\t<table style=\"font-family: Arial;font-size:14px;margin-left:40px;\">\n";
     output << "\t\t\t<tr>\n";
-    output << "\t\t\t<th style=\"text-align:center;background-color:#A0A0A0;width:175px\" scope=\"col\">Client/Status</th>\n";
-    output << "\t\t\t<th style=\"text-align:center;background-color:#A0A0A0;width:175px\" scope=\"col\">Timestamp</th>\n";
-    output << "\t\t\t<th style=\"text-align:center;background-color:#A0A0A0;width:70px\" scope=\"col\">Error</th>\n";
+    output << "\t\t\t<th style=\"text-align:center;background-color:#A0A0A0;width:190px\" scope=\"col\">Client/Status</th>\n";
+    output << "\t\t\t<th style=\"text-align:center;background-color:#A0A0A0;width:185px\" scope=\"col\">Timestamp</th>\n";
+    output << "\t\t\t<th style=\"text-align:center;background-color:#A0A0A0;width:40px\" scope=\"col\">Error</th>\n";
      output << "\t\t\t</tr>\n";
     output << "\t\t</thead>\n";
     output << "\t\t<tbody>\n";
-    const auto formattime = "%a %b %d %H:%M:%S"s;
+    const auto formattime = "%a - %b %d %H:%M:%S"s;
     for (const auto& client : clients.clients) {
 
         ConnectState state = ConnectState::NEVER;
