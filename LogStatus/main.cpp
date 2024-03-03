@@ -18,6 +18,14 @@
 
 using namespace std::string_literals;
 
+const std::string disconnectedColor = "#D0D0D0"s;
+const std::string serverIdle = "#99CCFF"s;
+const std::string serverShow = "#99FF99"s;
+const std::string clientError = "#FF8888"s;
+const std::string neverConnected = "#FFFF99"s;
+
+std::string serverColor = neverConnected ;
+
 enum ConnectState {
     NEVER, CONNECTED, DISCONNECTED
 };
@@ -119,18 +127,18 @@ auto writeEnding(std::ostream& output) -> void {
 // ===============================================================================================================================
 auto printTable(std::ostream& output, const ServerStatusEntry &serverstatus, ClientCollection& clients, ConnectionStatus& status, ErrorCollection& clienterrors) -> void {
     
-    auto color = "#FFFF99"s;
+    serverColor = neverConnected;
     auto text = "Not Running Server"s;
     if (serverstatus.isRunning) {
-        color = "#D0D0D0"s;
+        serverColor = disconnectedColor;
         text = "Server Waiting for Show Time"s;
     }
     if (serverstatus.isListening) {
-        color = "#99CCFF"s;
+        serverColor = serverIdle;
         text = "Server Idle"s;
     }
     if (serverstatus.inShow) {
-        color = "#99FF99";
+        serverColor = serverShow;
         text = "Playing Show"s;
     }
 
@@ -138,14 +146,14 @@ auto printTable(std::ostream& output, const ServerStatusEntry &serverstatus, Cli
     output << "\t<table style=\"font-family: Arial;font-size:16px;margin-left:40px;\">\n";
     output << "\t\t<thead>\n"; 
     output << "\t\t\t<tr>\n";
-    output << "\t\t\t<th style = \"text-align:center;color:"<< color<<";background-color:#303030;width:423px\" scope=\"col\">" << util::sysTimeToString(util::ourclock::now()) << "</th>\n";
+    output << "\t\t\t<th style = \"text-align:center;color:"<< serverColor <<";background-color:#303030;width:423px\" scope=\"col\">" << util::sysTimeToString(util::ourclock::now()) << "</th>\n";
     output << "\t\t\t</tr>\n";
     output << "\t\t\t<tr>\n";
     output << "\t\t\t<th style = \"text-align:center;color:#FFFFFF;background-color:#303030;width:423px\" scope=\"col\">Server Status</th>\n";
     output << "\t\t\t</tr>\n";
     output << "\t\t\t<tr>\n";
     output << "\t<table style=\"font-family: Arial;font-size:14px;margin-left:40px;\">\n";
-    output << "\t\t\t<td style = \"text-align:center;color:#000000;background-color:"<< color<<";width:423px\" scope=\"col\">" << text << "</td>\n";
+    output << "\t\t\t<td style = \"text-align:center;color:#000000;background-color:"<< serverColor <<";width:423px\" scope=\"col\">" << text << "</td>\n";
     output << "\t\t\t</tr>\n";
     output << "\t</table>\n";
 
@@ -210,26 +218,30 @@ auto printTable(std::ostream& output, const ServerStatusEntry &serverstatus, Cli
 // ==============================================================================================================
 //auto printTableRow(std::ostream& output, const std::string& client, ConnectState state, bool has_error) -> void {
 auto printTableRow(std::ostream& output, const std::string& client, ConnectState state, bool audioerr, bool playerr , const std::string &playname) -> void {
-    auto concolor = "#FFFF99"s;
+    auto concolor  = neverConnected;
     auto value = "Never"s;
     switch (state) {
     case ConnectState::NEVER:
-        concolor = "#FFFF99"s;
+        concolor = neverConnected;
         value = "Never"s;
         break;
     case ConnectState::CONNECTED:
-        concolor = "#99FF99"s;
+        concolor = serverColor;
         value = "Connected"s;
         break;
     case ConnectState::DISCONNECTED:
-        concolor = "#D0D0D0"s;
+        concolor = disconnectedColor;
         value = "Disconnected"s;
         break;
     }
+
+
+
+
     output << "\t\t\t<tr style=\"text-align:center;\">\n";
     output << "\t\t\t\t<td style=\"background-color:" << concolor << ";\">" << client << "</td>\n";
     output << "\t\t\t\t<td style=\"background-color:" << concolor << ";\">" << playname << "</td>\n";
-    output << "\t\t\t\t<td " << ((audioerr || playerr) ? "style=\"background-color:#FF8888;\">" : "style=\"background-color:#D0D0D0;\">") << ((audioerr || playerr) ? "Error" : "") << "</td>\n";
+    output << "\t\t\t\t<td " << ((audioerr || playerr) ? ("style=\"background-color:"s + clientError + ";\">") : ("style=\"background-color:"s + disconnectedColor + ";\">"s)) << ((audioerr || playerr) ? "Error" : "") << "</td>\n";
 //    output << "\t\t\t\t<td " << (playerr ? "style=\"background-color:#FF8888;\">" : "style=\"background-color:#D0D0D0;\">") << (playerr ? "Error" : "") << "</td>\n";
 //    output << "\t\t\t\t<td " << (playerr ? "style=\"background-color:#FF8888;\">" : "style=\"background-color:#D0D0D0;\">") << (playerr ? playname : "") << "</td>\n";
  
