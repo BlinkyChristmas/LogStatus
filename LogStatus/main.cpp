@@ -13,8 +13,8 @@
 #include "ClientCollection.hpp"
 #include "ConnectionStatus.hpp"
 #include "ServerStatus.hpp"
-#include "utility\timeutil.hpp"
-#include "utility\strutil.hpp"
+#include "utility/timeutil.hpp"
+#include "utility/strutil.hpp"
 
 using namespace std::string_literals;
 

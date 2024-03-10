@@ -37,7 +37,7 @@ auto ConnectionStatus::load(const std::filesystem::path &filepath) -> bool  {
         if (input.gcount()>0) {
             buffer[input.gcount()] = 0 ;
             std::string line = buffer.data() ;
-            line = util::trim(line) ;
+            line = util::trim(util::strip(line,"#")) ;
             if (!line.empty()) {
                 auto [name,data] = util::split(line, "=") ;
                 auto iter = connectionStatus.find(name) ;

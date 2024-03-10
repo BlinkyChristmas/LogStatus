@@ -7,7 +7,7 @@
 #include <iostream>
 #include <string>
 #include <filesystem>
-
+#include <vector>
 //======================================================================
 struct ServerStatusEntry {
     bool isRunning ;
